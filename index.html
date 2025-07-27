@@ -18,8 +18,8 @@
             color: #333; /* Dark gray text */
         }
 
-        /* Fixed Header / Navbar */
-        .fixed-header {
+        /* Dynamic Header / Navbar */
+        .dynamic-header {
             position: fixed;
             top: 0;
             left: 0;
@@ -28,6 +28,12 @@
             backdrop-filter: blur(8px); /* Frosted glass effect */
             z-index: 100;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transform: translateY(0); /* Start visible */
+            transition: transform 0.3s ease-out; /* Smooth transition for sliding */
+        }
+
+        .dynamic-header.hidden-header {
+            transform: translateY(-100%); /* Slide up to hide */
         }
 
         /* Section fade-in animation */
@@ -95,8 +101,8 @@
 </head>
 <body class="antialiased">
 
-    <!-- Fixed Header / Navbar -->
-    <header id="main-header" class="fixed-header py-4">
+    <!-- Dynamic Header / Navbar -->
+    <header id="main-header" class="dynamic-header py-4">
         <nav class="container mx-auto px-4 sm:px-6 lg:px-8 flex justify-center space-x-8 text-lg text-white">
             <a href="#hero" class="hover:text-gray-300 transition duration-300">Home</a>
             <a href="#about" class="hover:text-gray-300 transition duration-300">About</a>
@@ -327,18 +333,22 @@
             }
 
 
-            // 3. Sticky Navbar Functionality
-            const mainHeader = document.getElementById('main-header'); // Changed from 'navbar' to 'main-header'
-            const heroSection = document.getElementById('hero');
-            // Ensure heroSection is not null before accessing offsetHeight
-            if (mainHeader && heroSection) {
-                const heroHeight = heroSection.offsetHeight;
+            // 3. Dynamic Header Functionality (Hide on scroll down, show on scroll up)
+            const mainHeader = document.getElementById('main-header');
+            let lastScrollY = window.scrollY;
 
-                window.addEventListener('scroll', () => {
-                    // The header is now fixed by default, so no need to add/remove 'show' class
-                    // If you want it to hide/show based on scroll, you'd re-implement that logic here.
-                });
-            }
+            window.addEventListener('scroll', () => {
+                if (mainHeader) {
+                    if (window.scrollY > lastScrollY && window.scrollY > mainHeader.offsetHeight) {
+                        // Scrolling down and past the header height
+                        mainHeader.classList.add('hidden-header');
+                    } else if (window.scrollY < lastScrollY) {
+                        // Scrolling up
+                        mainHeader.classList.remove('hidden-header');
+                    }
+                    lastScrollY = window.scrollY;
+                }
+            });
 
 
             // 4. Scroll to Top Button Functionality
