@@ -196,7 +196,7 @@
             <div class="text-sm md:text-lg text-gray-400 leading-relaxed max-w-3xl mx-auto">
                 <p class="mb-4">Operational objectives for this week:</p>
                 <ul id="weeklyTasksList" class="list-disc list-inside space-y-3 text-gray-300">
-                    <!-- Tasks will be dynamically loaded here from Firestore -->
+                    <!-- Tasks will be dynamically loaded here or use static content -->
                     <li class="text-gray-500 italic">LOADING...</li>
                 </ul>
                 <p class="mt-4 text-xs md:text-sm text-gray-500">
@@ -212,15 +212,14 @@
                 <p class="mb-6">
                     Connect with my visual broadcasts on Instagram!
                 </p>
-                <div class="instagram-embed-container embed-container mx-auto w-full max-w-xs sm:max-w-sm md:max-w-md">
-                    <iframe src="https://www.instagram.com/susaraviduneth/embed/"
-                            width="100%" height="100%" frameborder="0" scrolling="no" allowtransparency="true"
-                            title="Instagram Profile">
-                    </iframe>
+                <!-- Removed the iframe to fix the X-Frame-Options error -->
+                <div class="embed-container mx-auto w-full max-w-xs sm:max-w-sm md:max-w-md bg-gray-900 border border-gray-700 rounded-lg p-6">
+                    <p class="text-gray-400 text-sm">
+                        Instagram's security policy prevents embedding their feed directly.
+                        <br>
+                        Please click the button below to view my profile.
+                    </p>
                 </div>
-                <p class="mt-6 text-xs md:text-sm text-gray-500">
-                    (Due to Instagram's embedding protocols, the full interactive experience is restricted. Access the direct link below for full immersion.)
-                </p>
                 <a href="https://www.instagram.com/susaraviduneth" target="_blank" rel="noopener noreferrer"
                    class="inline-block mt-4 bg-fuchsia-600 hover:bg-fuchsia-700 text-white text-base md:text-lg font-semibold py-2 px-6 rounded-full shadow-lg transform hover:scale-105" style="box-shadow: 0 0 10px #d946ef;">
                     ACCESS ON INSTAGRAM
@@ -278,7 +277,7 @@
         // Import Firebase modules
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInWithCustomToken, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, onSnapshot, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // Global variables for Firebase configuration
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
@@ -289,58 +288,79 @@
         const heroImageElement = document.getElementById('heroImage');
         const weeklyTasksListElement = document.getElementById('weeklyTasksList');
 
-        // Initialize Firebase and Authentication
-        let app, db, auth;
+        // Check for Firebase config and initialize if valid
+        let app, db, auth, isFirebaseReady = false;
 
         document.addEventListener('DOMContentLoaded', async (event) => {
-            // Initialize app and services
-            app = initializeApp(firebaseConfig);
-            db = getFirestore(app);
-            auth = getAuth(app);
-            
-            // Sign in with the provided custom token or anonymously
-            if (initialAuthToken) {
-                await signInWithCustomToken(auth, initialAuthToken);
+            if (firebaseConfig && firebaseConfig.projectId) {
+                try {
+                    app = initializeApp(firebaseConfig);
+                    db = getFirestore(app);
+                    auth = getAuth(app);
+                    isFirebaseReady = true;
+
+                    // Sign in with the provided custom token or anonymously
+                    if (initialAuthToken) {
+                        await signInWithCustomToken(auth, initialAuthToken);
+                    } else {
+                        await signInAnonymously(auth);
+                    }
+                } catch (e) {
+                    console.error("Firebase initialization failed:", e);
+                    weeklyTasksListElement.innerHTML = `<li class="text-red-500 italic">Error initializing Firebase. Please check your configuration.</li>`;
+                    isFirebaseReady = false;
+                }
             } else {
-                await signInAnonymously(auth);
+                console.warn("Firebase 'projectId' not found. Displaying static content.");
+                isFirebaseReady = false;
+                // Load static content as a fallback
+                weeklyTasksListElement.innerHTML = `
+                    <li>Finalize Grade 11 school projects</li>
+                    <li>Research and design a new portfolio layout</li>
+                    <li>Update portfolio with latest graphic design work</li>
+                    <li>Learn about the basics of JavaScript frameworks</li>
+                    <li>Work on a new AI-generated art piece</li>
+                `;
             }
-            
-            onAuthStateChanged(auth, (user) => {
-                if (user) {
-                    // Define the Firestore document path for the user's website data
-                    const userDocRef = doc(db, 'artifacts', appId, 'users', user.uid, 'websiteData', 'content');
-                    
-                    // Set up real-time listener for the document
-                    onSnapshot(userDocRef, (docSnap) => {
-                        if (docSnap.exists()) {
-                            const data = docSnap.data();
-                            // Update the hero image
-                            if (data.heroImageUrl) {
-                                heroImageElement.src = data.heroImageUrl;
-                            }
-                            
-                            // Update the weekly tasks list
-                            weeklyTasksListElement.innerHTML = ''; // Clear existing tasks
-                            if (data.weeklyTasks && data.weeklyTasks.length > 0) {
-                                data.weeklyTasks.forEach(task => {
-                                    const li = document.createElement('li');
-                                    li.textContent = task;
-                                    weeklyTasksListElement.appendChild(li);
-                                });
+
+            // Set up real-time listener if Firebase is ready
+            if (isFirebaseReady) {
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        const userDocRef = doc(db, 'artifacts', appId, 'users', user.uid, 'websiteData', 'content');
+                        
+                        onSnapshot(userDocRef, (docSnap) => {
+                            if (docSnap.exists()) {
+                                const data = docSnap.data();
+                                // Update the hero image
+                                if (data.heroImageUrl) {
+                                    heroImageElement.src = data.heroImageUrl;
+                                }
+                                
+                                // Update the weekly tasks list
+                                weeklyTasksListElement.innerHTML = '';
+                                if (data.weeklyTasks && data.weeklyTasks.length > 0) {
+                                    data.weeklyTasks.forEach(task => {
+                                        const li = document.createElement('li');
+                                        li.textContent = task;
+                                        weeklyTasksListElement.appendChild(li);
+                                    });
+                                } else {
+                                    weeklyTasksListElement.innerHTML = '<li class="text-gray-500 italic">No tasks found.</li>';
+                                }
                             } else {
+                                // Document does not exist, set defaults
+                                heroImageElement.src = "https://i.ibb.co/C55KrgPK/Smiling-Gamer-with-Headphones-Photoroom.png";
                                 weeklyTasksListElement.innerHTML = '<li class="text-gray-500 italic">No tasks found.</li>';
                             }
-                        } else {
-                            // Document does not exist, set defaults
-                            heroImageElement.src = "https://i.ibb.co/C55KrgPK/Smiling-Gamer-with-Headphones-Photoroom.png";
-                            weeklyTasksListElement.innerHTML = '<li class="text-gray-500 italic">No tasks found.</li>';
-                        }
-                    }, (error) => {
-                        console.error("Error listening to document:", error);
-                        weeklyTasksListElement.innerHTML = '<li class="text-red-500">Error loading tasks.</li>';
-                    });
-                }
-            });
+                        }, (error) => {
+                            console.error("Error listening to document:", error);
+                            weeklyTasksListElement.innerHTML = '<li class="text-red-500">Error loading tasks.</li>';
+                        });
+                    }
+                });
+            }
+
 
             // JavaScript for dynamic greeting, sticky navbar, scroll-to-top button, and section fade-in
 
@@ -429,8 +449,6 @@
             sections.forEach(section => {
                 observer.observe(section);
             });
-
-            console.log("All scripts initialized."); // Added for debugging
         });
     </script>
 </body>
