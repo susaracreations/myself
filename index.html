@@ -3,74 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Susara Viduneth — Visual Architect</title>
+    <title>S. VIDUNETH — ARCHIVE</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="icon" href="https://i.ibb.co/N6V7NWNp/insta-dp-new-one-2.png" type="image/png">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Instrument+Serif:ital@0;1&family=Syne:wght@400;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@900&family=Syne:wght@800&family=Instrument+Serif:ital@1&display=swap');
 
         :root {
-            --paper: #fdfdfd;
+            --bg: #f6f6f6;
             --ink: #000000;
-            --secondary: #777777;
-            --ruling: rgba(0, 0, 0, 0.04);
-            --accent: #111111;
-        }
-
-        * {
-            -webkit-tap-highlight-color: transparent;
-            cursor: crosshair;
+            --line: rgba(0,0,0,0.1);
         }
 
         body {
-            background-color: var(--paper);
+            background-color: var(--bg);
             color: var(--ink);
             font-family: 'Inter', sans-serif;
             -webkit-font-smoothing: antialiased;
             overflow-x: hidden;
-            line-height: 1.5;
+            word-break: break-word;
         }
 
-        /* Architectural Ruling Grid */
-        .grid-guide {
-            position: fixed;
-            top: 0; left: 10%; width: 1px; height: 100%;
-            background: var(--ruling);
-            z-index: -1;
-        }
-        .grid-guide-right {
-            position: fixed;
-            top: 0; right: 10%; width: 1px; height: 100%;
-            background: var(--ruling);
-            z-index: -1;
+        /* Brutalist Typography - Mobile Optimized */
+        .massive-text {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            text-transform: uppercase;
+            line-height: 0.8;
+            letter-spacing: -0.06em;
+            /* Scaled for mobile first */
+            font-size: clamp(5rem, 28vw, 24rem);
         }
 
-        /* Analog Texture */
-        .texture-layer {
+        .sub-massive {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            text-transform: uppercase;
+            line-height: 0.85;
+            letter-spacing: -0.04em;
+            font-size: clamp(3.5rem, 18vw, 12rem);
+        }
+
+        /* Layout Ruling */
+        .hr-line {
+            width: 100%;
+            height: 1px;
+            background-color: var(--line);
+            margin: 1.5rem 0;
+        }
+
+        /* Texture Layer */
+        .grain {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             background-image: url("https://www.transparenttextures.com/patterns/p6.png");
-            opacity: 0.08;
+            opacity: 0.15;
             pointer-events: none;
             z-index: 9999;
         }
 
-        .serif { font-family: 'Instrument Serif', serif; }
-        .heading { font-family: 'Syne', sans-serif; }
-
-        /* Typography */
-        .title-giant {
-            font-size: clamp(3.5rem, 16vw, 13rem);
-            line-height: 0.8;
-            letter-spacing: -0.07em;
-            font-weight: 800;
+        /* Mobile Optimized Nav */
+        nav {
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--line);
+            background: rgba(246, 246, 246, 0.8);
         }
 
-        /* Reveal Core */
+        .nav-link {
+            font-size: 10px;
+            font-weight: 900;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+        }
+
+        /* Animation States */
         .reveal {
             opacity: 0;
-            transform: translateY(30px);
-            transition: all 1.4s cubic-bezier(0.16, 1, 0.3, 1);
+            transform: translateY(20px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .reveal.active {
@@ -78,298 +89,135 @@
             transform: translateY(0);
         }
 
-        /* Studio Card Refinement */
-        .doc-card {
-            background: white;
-            border: 1px solid rgba(0,0,0,0.06);
-            padding: 3rem 2.5rem;
-            position: relative;
-            transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .doc-card:hover {
-            border-color: var(--ink);
-            transform: translateY(-10px);
-            box-shadow: 0 40px 80px -20px rgba(0,0,0,0.1);
-        }
-
-        .doc-card::after {
-            content: '';
-            position: absolute;
-            bottom: 0; left: 0; width: 0; height: 3px;
-            background: var(--ink);
-            transition: width 0.7s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .doc-card:hover::after { width: 100%; }
-
-        /* Navigation Glassmorphism */
-        header {
-            background: rgba(253, 253, 253, 0.8);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-        }
-
-        .nav-link {
-            font-size: 10px;
-            font-weight: 800;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            position: relative;
-        }
-
-        .nav-link::before {
-            content: '[';
-            position: absolute;
-            left: -12px; opacity: 0;
-            transition: all 0.3s ease;
-        }
-        .nav-link::after {
-            content: ']';
-            position: absolute;
-            right: -12px; opacity: 0;
-            transition: all 0.3s ease;
-        }
-        .nav-link:hover::before, .nav-link:hover::after { opacity: 0.3; left: -8px; right: -8px; }
-
-        /* Status Pulse */
-        .status-mark {
-            width: 5px; height: 5px;
-            background: #000;
-            display: inline-block;
-            border-radius: 50%;
-            margin-right: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.2);
-            animation: blink 2.5s infinite;
-        }
-
-        @keyframes blink {
-            0%, 100% { opacity: 0.2; }
-            50% { opacity: 1; }
-        }
-
         /* Image Masking */
-        .mask-wrap {
-            position: relative;
-            clip-path: inset(0 0 0 0);
-            transition: clip-path 1s cubic-bezier(0.16, 1, 0.3, 1);
+        .image-container {
+            filter: grayscale(100%) contrast(110%);
+            transition: all 0.6s ease;
+            width: 100%;
         }
-        .mask-wrap:hover {
-            clip-path: inset(2% 2% 2% 2%);
+
+        /* Task Cards - Mobile Optimized Tap Targets */
+        .task-card {
+            border: 1px solid var(--line);
+            padding: 2.5rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            aspect-ratio: 1/1;
+            transition: all 0.4s ease;
+            background: white;
+        }
+
+        .task-card:active {
+            background: black;
+            color: white;
+        }
+
+        @media (min-width: 1024px) {
+            .task-card:hover {
+                background: black;
+                color: white;
+            }
         }
     </style>
 </head>
 <body class="selection:bg-black selection:text-white">
-    <div class="texture-layer"></div>
-    <div class="grid-guide"></div>
-    <div class="grid-guide-right"></div>
+    <div class="grain"></div>
 
-    <!-- Architectural Navigation -->
-    <header class="fixed top-0 left-0 w-full z-[1000] border-b border-black/[0.03]">
-        <div class="max-w-[1800px] mx-auto px-6 lg:px-12 py-7 flex justify-between items-center">
-            <div class="flex items-center gap-6">
-                <span class="heading font-black text-2xl tracking-tighter">S.V/STUDIO</span>
-                <div class="hidden md:flex items-center bg-black text-white px-3 py-1 text-[8px] font-black uppercase tracking-widest">
-                    <span class="status-mark !bg-white"></span> Online
-                </div>
-            </div>
-            
-            <nav class="flex gap-10">
-                <a href="#about" class="nav-link">Theory</a>
-                <a href="#work" class="nav-link">Catalog</a>
-                <a href="mailto:susaraviduneth@gmail.com" class="nav-link text-secondary">Contact</a>
-            </nav>
+    <!-- Sticky Navigation -->
+    <nav class="fixed top-0 left-0 w-full z-[100] px-4 py-5 flex justify-between items-center">
+        <span class="text-xs font-black tracking-tighter">S.V / STUDIO</span>
+        <div class="flex gap-4 sm:gap-8">
+            <a href="#archives" class="nav-link">Catalog</a>
+            <a href="mailto:susaraviduneth@gmail.com" class="nav-link">Mail</a>
         </div>
-    </header>
+    </nav>
 
-    <main class="w-full max-w-[1800px] mx-auto px-6 lg:px-12 pt-40 lg:pt-60">
+    <main class="pt-24 px-4 sm:px-8 max-w-[1400px] mx-auto">
         
-        <!-- Hero: The Blueprint -->
-        <section class="min-h-[85vh] mb-40 lg:mb-80 relative">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 reveal active">
-                <!-- Metadata Sidebar -->
-                <div class="hidden lg:block lg:col-span-1 border-r border-black/[0.05] h-full pt-4">
-                    <div class="rotate-90 origin-left translate-x-4 whitespace-nowrap text-[9px] font-black uppercase tracking-[0.6em] text-secondary">
-                        Reference — 2025 // Portfolio // S. Viduneth
+        <!-- Hero Section: The Statement -->
+        <section class="mb-32">
+            <div class="reveal active">
+                <span class="text-[9px] font-black uppercase tracking-[0.4em] text-black/30 mb-6 block">Identity Log // 2025</span>
+                <h1 class="massive-text -ml-1">
+                    S.<br>VIDUNET
+                </h1>
+            </div>
+
+            <div class="mt-12 reveal active delay-100">
+                <div class="hr-line"></div>
+                <div class="flex flex-col gap-6 py-4">
+                    <p class="text-2xl sm:text-4xl font-light leading-tight text-neutral-500 max-w-xl">
+                        A <span class="text-black font-bold">Visual Architect</span> crafting digital narratives through structural precision.
+                    </p>
+                    <div class="flex justify-between items-end">
+                        <span class="text-[9px] font-mono font-bold uppercase tracking-widest text-neutral-400">Colombo // LK</span>
+                        <div id="lmt-clock" class="font-mono text-[9px] text-neutral-400">LMT // 00:00:00</div>
                     </div>
                 </div>
+                <div class="hr-line"></div>
+            </div>
+        </section>
 
-                <div class="lg:col-span-11">
-                    <div class="flex items-center gap-4 mb-16">
-                        <span class="w-16 h-px bg-black"></span>
-                        <span class="text-[10px] font-bold uppercase tracking-[0.5em] text-secondary">Creative Director & Architect</span>
+        <!-- Archives: The Catalog -->
+        <section id="archives" class="mb-32">
+            <div class="reveal">
+                <span class="text-[9px] font-black uppercase tracking-[0.4em] text-black/30 mb-4 block">Selected Records</span>
+                <h2 class="sub-massive mb-12">ARCHIVES</h2>
+            </div>
+
+            <!-- Mobile Grid: Single column by default -->
+            <div id="taskGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- Syncing Fallback -->
+                <div class="task-card opacity-50 border-dashed">
+                    <span class="text-[8px] font-black uppercase tracking-widest">Protocol 00</span>
+                    <h3 class="text-3xl font-bold tracking-tighter italic font-serif">Awaiting Sync...</h3>
+                    <span class="text-[9px] uppercase tracking-widest">Remote Access</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- About / Profile -->
+        <section id="about" class="mb-32">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+                <div class="lg:col-span-5 reveal">
+                    <div class="image-container bg-neutral-200">
+                        <img id="heroImage" src="https://i.ibb.co/N6V7NWNp/insta-dp-new-one-2.png" alt="S. Viduneth" class="w-full grayscale brightness-110 contrast-125 aspect-[4/5] object-cover">
                     </div>
-
-                    <h1 class="title-giant heading mb-20">
-                        DEFINING<br>
-                        <span class="flex items-baseline gap-6 flex-wrap">
-                            <span class="serif italic font-light text-secondary lowercase">aesthetic</span>
-                            <span>LOGIC</span>
-                        </span>
-                    </h1>
-
-                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
-                        <div class="lg:col-span-7">
-                            <p class="text-3xl md:text-5xl font-light text-secondary leading-[1.1] mb-12 max-w-3xl">
-                                Constructing <span class="text-ink font-semibold">high-fidelity</span> digital experiences through the lens of structural engineering and visual art.
-                            </p>
-                            <div class="flex items-center gap-8">
-                                <span class="serif italic text-5xl">Susara Viduneth</span>
-                                <div class="h-px flex-1 bg-black/5 max-w-[100px]"></div>
-                                <span class="text-[10px] font-mono font-bold text-secondary">06.892.41 — SYNC</span>
-                            </div>
-                        </div>
-
-                        <div class="lg:col-span-5">
-                            <div class="mask-wrap shadow-3xl">
-                                <img id="heroImage" src="https://i.ibb.co/N6V7NWNp/insta-dp-new-one-2.png" 
-                                     class="w-full aspect-[4/5] object-cover grayscale brightness-110 contrast-105">
-                                <div class="absolute bottom-6 right-6 bg-white/95 p-5 border border-black/5 text-right">
-                                    <span class="block text-[8px] font-black uppercase tracking-widest text-secondary mb-1">Subject No.</span>
-                                    <span class="heading font-bold text-xl">001-ALPHA</span>
-                                </div>
-                            </div>
+                </div>
+                <div class="lg:col-span-7 reveal">
+                    <div class="pt-8 lg:pt-0">
+                        <span class="text-[9px] font-black uppercase tracking-[0.4em] text-black/30 mb-8 block">Bio / Concept</span>
+                        <h2 class="text-5xl sm:text-7xl font-black tracking-tighter leading-[0.85] mb-8">HUMAN MADE.</h2>
+                        <p class="text-lg sm:text-2xl font-light text-neutral-600 leading-snug mb-10">
+                            Grade 11 Student at D.S. Senanayake College. Transitioning academic logic into visual systems. Focused on minimalism that feels tactile.
+                        </p>
+                        <div class="flex flex-wrap gap-6">
+                            <a href="https://instagram.com/susaraviduneth" class="text-[10px] font-black uppercase tracking-widest border-b-2 border-black pb-1">Instagram</a>
+                            <a href="https://github.com/susaracreations" class="text-[10px] font-black uppercase tracking-widest border-b-2 border-black pb-1">Github</a>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- The Narrative: Content Architecture -->
-        <section id="about" class="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-32 mb-40 lg:mb-80">
-            <div class="lg:col-span-4 sticky top-40 h-fit reveal">
-                <span class="text-[10px] font-black uppercase tracking-[0.5em] text-black/20 block mb-8">Studio Narrative</span>
-                <h3 class="heading font-bold text-4xl lg:text-6xl mb-10 tracking-tighter">The Vision.</h3>
-                <div class="h-1 w-20 bg-black mb-10"></div>
-                <p class="text-xl text-secondary leading-relaxed serif italic">
-                    "I believe that the most powerful designs are those that feel inevitable. They possess a logic that cannot be argued with."
-                </p>
+        <!-- Network Feed -->
+        <section class="mb-40">
+            <div class="flex items-center gap-4 mb-12 reveal">
+                <span class="text-[9px] font-black uppercase tracking-[0.4em] text-black/20">Global Sync</span>
+                <div class="h-[1px] flex-1 bg-black/[0.05]"></div>
             </div>
-
-            <div class="lg:col-span-8 space-y-24 reveal">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
-                    <div class="space-y-6">
-                        <span class="text-[9px] font-black uppercase tracking-widest text-secondary">01 / Philosophy</span>
-                        <h4 class="heading font-bold text-2xl">Human Centric Systems</h4>
-                        <p class="text-secondary text-sm leading-loose">At 16, I approach design not as a decorator, but as a systems builder. My tenure at D.S. Senanayake College has instilled a rigorous analytical mindset that I apply to every visual problem.</p>
-                    </div>
-                    <div class="space-y-6">
-                        <span class="text-[9px] font-black uppercase tracking-widest text-secondary">02 / Execution</span>
-                        <h4 class="heading font-bold text-2xl">Structural Precision</h4>
-                        <p class="text-secondary text-sm leading-loose">Every layout is governed by a strict mathematical grid. Whitespace is used as a functional element to guide focus and create a premium breathing room for the content.</p>
-                    </div>
-                </div>
-
-                <!-- Proficiency Matrix -->
-                <div class="bg-black text-white p-12 lg:p-20">
-                    <span class="text-[9px] font-black uppercase tracking-[0.4em] opacity-30 block mb-16">Proficiency Parameters</span>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
-                        <div class="space-y-4">
-                            <span class="serif italic text-3xl">Visual Strategy</span>
-                            <div class="flex items-center gap-4">
-                                <div class="h-[2px] flex-1 bg-white/10"><div class="h-full bg-white w-[94%]"></div></div>
-                                <span class="text-[10px] font-bold">94</span>
-                            </div>
-                        </div>
-                        <div class="space-y-4">
-                            <span class="serif italic text-3xl">UI Architecture</span>
-                            <div class="flex items-center gap-4">
-                                <div class="h-[2px] flex-1 bg-white/10"><div class="h-full bg-white w-[89%]"></div></div>
-                                <span class="text-[10px] font-bold">89</span>
-                            </div>
-                        </div>
-                        <div class="space-y-4">
-                            <span class="serif italic text-3xl">Core Logic</span>
-                            <div class="flex items-center gap-4">
-                                <div class="h-[2px] flex-1 bg-white/10"><div class="h-full bg-white w-[85%]"></div></div>
-                                <span class="text-[10px] font-bold">85</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Archives: Professional Catalog -->
-        <section id="work" class="mb-40 lg:mb-80">
-            <div class="flex flex-col md:flex-row justify-between items-end mb-24 border-b border-black/10 pb-16 reveal">
-                <div class="max-w-2xl">
-                    <span class="text-[10px] font-bold text-secondary uppercase tracking-[0.4em] block mb-4">Cataloged Works</span>
-                    <h2 class="heading text-7xl lg:text-[11rem] font-extrabold tracking-tighter leading-[0.8]">ARCHIVES</h2>
-                </div>
-                <div id="colombo-clock" class="text-[10px] font-mono font-bold uppercase tracking-widest text-secondary mt-12 md:mt-0 px-6 py-3 border border-black/10 bg-white">
-                    SYNCING TEMPORAL DATA...
-                </div>
-            </div>
-            
-            <div id="weeklyTasksList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 reveal">
-                <!-- Static High-Fidelity Previews -->
-                <div class="doc-card group">
-                    <div class="flex justify-between items-start mb-20">
-                        <span class="text-[8px] font-black uppercase tracking-widest text-secondary">Vol. 01 / Ref. 00A</span>
-                        <div class="w-10 h-px bg-black/10"></div>
-                    </div>
-                    <h4 class="serif italic text-4xl mb-12 group-hover:pl-4 transition-all duration-700">Architecture of Visual Systems</h4>
-                    <div class="flex items-center justify-between">
-                        <span class="text-[9px] font-black uppercase tracking-widest py-2 border-b border-black">Active Study</span>
-                        <span class="text-[10px] font-mono text-secondary">2025</span>
-                    </div>
-                </div>
-                <div class="doc-card group">
-                    <div class="flex justify-between items-start mb-20">
-                        <span class="text-[8px] font-black uppercase tracking-widest text-secondary">Vol. 02 / Ref. 00B</span>
-                        <div class="w-10 h-px bg-black/10"></div>
-                    </div>
-                    <h4 class="serif italic text-4xl mb-12 group-hover:pl-4 transition-all duration-700">Grade 11 Academic Synthesis</h4>
-                    <div class="flex items-center justify-between">
-                        <span class="text-[9px] font-black uppercase tracking-widest py-2 border-b border-black">In-Progress</span>
-                        <span class="text-[10px] font-mono text-secondary">2025</span>
-                    </div>
-                </div>
-                <div class="doc-card group">
-                    <div class="flex justify-between items-start mb-20">
-                        <span class="text-[8px] font-black uppercase tracking-widest text-secondary">Vol. 03 / Ref. 00C</span>
-                        <div class="w-10 h-px bg-black/10"></div>
-                    </div>
-                    <h4 class="serif italic text-4xl mb-12 group-hover:pl-4 transition-all duration-700">Motion & Interaction Logic</h4>
-                    <div class="flex items-center justify-between">
-                        <span class="text-[9px] font-black uppercase tracking-widest py-2 border-b border-black">Theory</span>
-                        <span class="text-[10px] font-mono text-secondary">2025</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Social Archive -->
-            <div class="mt-40 reveal">
-                <div class="flex items-center gap-6 mb-16">
-                    <span class="text-[10px] font-black uppercase tracking-[0.5em] text-secondary">Global Feed Sync</span>
-                    <div class="flex-1 h-px bg-black/10"></div>
-                </div>
-                <script src="https://elfsightcdn.com/platform.js" async></script>
-                <div class="elfsight-app-259dcfc0-efdd-4e75-88c5-b9d92df993b1" data-elfsight-app-lazy></div>
-            </div>
+            <script src="https://elfsightcdn.com/platform.js" async></script>
+            <div class="elfsight-app-259dcfc0-efdd-4e75-88c5-b9d92df993b1" data-elfsight-app-lazy></div>
         </section>
 
     </main>
 
-    <!-- Professional Colophon -->
-    <footer class="py-40 lg:py-60 bg-white border-t border-black/5 px-6 lg:px-12 text-center overflow-hidden">
-        <div class="max-w-6xl mx-auto">
-            <h2 class="heading text-6xl sm:text-8xl lg:text-[13rem] font-extrabold tracking-tighter mb-12 leading-none uppercase">S. VIDUNETH</h2>
-            <div class="flex flex-col md:flex-row justify-center items-center gap-10">
-                <span class="serif italic text-3xl text-secondary">Visual Architect</span>
-                <div class="w-2 h-2 bg-black rounded-full hidden md:block"></div>
-                <span class="serif italic text-3xl text-secondary">Digital Strategist</span>
-            </div>
-        </div>
-        
-        <div class="flex flex-col md:flex-row justify-between items-center gap-8 text-[9px] font-black text-secondary uppercase tracking-[0.6em] mt-48 px-10">
-            <span>Location: Colombo // LK</span>
-            <div class="flex gap-10">
-                <a href="https://instagram.com/susaraviduneth" class="hover:text-black transition-colors">Instagram</a>
-                <a href="https://github.com/susaracreations" class="hover:text-black transition-colors">Github</a>
-            </div>
-            <span>© 2025 S.V. Archive Studio</span>
+    <!-- Footer -->
+    <footer class="bg-black text-white px-4 py-32 text-center overflow-hidden">
+        <div class="reveal">
+            <h2 class="massive-text opacity-20 select-none">VIDUNETH</h2>
+            <p class="text-[8px] font-black uppercase tracking-[1.5em] text-white/40 mt-12">© 2025 S.V. Archive Studio // All Rights Reserved</p>
         </div>
     </footer>
 
@@ -381,67 +229,52 @@
         const appId = 'human-studio-2025';
         const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
 
-        // Precise Studio Clock
+        // LMT Clock Function
         function updateClock() {
-            const clock = document.getElementById('colombo-clock');
+            const clock = document.getElementById('lmt-clock');
             if(!clock) return;
             const now = new Date();
-            const timeStr = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: 'Asia/Colombo' });
-            clock.innerText = `LMT // ${timeStr}`;
+            clock.innerText = `LMT // ${now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: 'Asia/Colombo' })}`;
         }
         setInterval(updateClock, 1000);
         updateClock();
 
-        // Reveal Controller
+        // Viewport Observer
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('active');
-                }
+                if (entry.isIntersecting) entry.target.classList.add('active');
             });
-        }, { threshold: 0.1 });
+        }, { threshold: 0.05 });
         document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-        // Identity Synchronizer
+        // Firebase Integration
         if (firebaseConfig.projectId) {
             const app = initializeApp(firebaseConfig);
             const auth = getAuth(app);
             const db = getFirestore(app);
 
-            const startAuth = async () => {
-                try { await signInAnonymously(auth); } catch (e) { console.warn("Identity offline. Using buffered data."); }
-            };
-            startAuth();
-
-            onAuthStateChanged(auth, (user) => {
-                if (user) {
-                    const docRef = doc(db, 'artifacts', appId, 'users', user.uid, 'portfolio', 'data');
-                    onSnapshot(docRef, (snap) => {
-                        if (snap.exists()) {
-                            renderData(snap.data());
-                        }
-                    });
-                }
+            signInAnonymously(auth).then(() => {
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        const docRef = doc(db, 'artifacts', appId, 'users', user.uid, 'portfolio', 'data');
+                        onSnapshot(docRef, (snap) => {
+                            if (snap.exists()) renderTasks(snap.data());
+                        });
+                    }
+                });
             });
         }
 
-        function renderData(data) {
-            const heroImg = document.getElementById('heroImage');
-            const taskDisplay = document.getElementById('weeklyTasksList');
-
-            if (data.heroImageUrl && heroImg) heroImg.src = data.heroImageUrl;
-            
-            if(data.weeklyTasks && taskDisplay) {
-                taskDisplay.innerHTML = data.weeklyTasks.map((t, idx) => `
-                    <div class="doc-card group">
-                        <div class="flex justify-between items-start mb-20">
-                            <span class="text-[8px] font-black uppercase tracking-widest text-secondary">Vol. 0${idx + 1} / Ref. 00${idx + 1}</span>
-                            <div class="w-10 h-px bg-black/10"></div>
-                        </div>
-                        <h4 class="serif italic text-4xl mb-12 group-hover:pl-4 transition-all duration-700 text-ink">${t}</h4>
-                        <div class="flex items-center justify-between">
-                            <span class="text-[9px] font-black uppercase tracking-widest py-1 border-b border-black">Studio Log</span>
-                            <span class="text-[10px] font-mono text-secondary">P.0${idx + 1}</span>
+        function renderTasks(data) {
+            const taskGrid = document.getElementById('taskGrid');
+            if(data.weeklyTasks && taskGrid) {
+                taskGrid.innerHTML = data.weeklyTasks.map((t, idx) => `
+                    <div class="task-card reveal active">
+                        <span class="text-[8px] font-black uppercase tracking-widest opacity-30">Archive Ref. 00${idx + 1}</span>
+                        <h3 class="text-3xl font-bold tracking-tighter italic font-serif leading-none py-8">${t}</h3>
+                        <div class="flex justify-between items-center">
+                            <span class="text-[9px] font-black uppercase tracking-widest">Entry</span>
+                            <span class="text-[9px] font-mono text-black/20">2025.ARCH</span>
                         </div>
                     </div>
                 `).join('');
